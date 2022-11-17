@@ -16,8 +16,8 @@
 
 # Downloading data from Physionet servers
 echo "Downloading data from Physionet servers ..."
-wget https://physionet.org/static/published-projects/qtdb/qt-database-1.0.0.zip
-wget https://physionet.org/static/published-projects/nstdb/mit-bih-noise-stress-test-database-1.0.0.zip
+wget --no-check-certificate https://physionet.org/static/published-projects/qtdb/qt-database-1.0.0.zip
+wget --no-check-certificate https://physionet.org/static/published-projects/nstdb/mit-bih-noise-stress-test-database-1.0.0.zip
 
 # Create a data folder
 mkdir data

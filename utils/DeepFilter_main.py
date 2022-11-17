@@ -15,24 +15,24 @@ import _pickle as pickle
 from datetime import datetime
 import time
 import numpy as np
+import visualization as vs
+import data_preparation as dp
 
-from utils.metrics import MAD, SSD, PRD, COS_SIM
-from utils import visualization as vs
-from Data_Preparation import data_preparation as dp
+from metrics import MAD, SSD, PRD, COS_SIM
 
-from digitalFilters.dfilters import FIR_test_Dataset, IIR_test_Dataset
-from deepFilter.dl_pipeline import train_dl, test_dl
+from dfilters import FIR_test_Dataset, IIR_test_Dataset
+from dl_pipeline import train_dl, test_dl
 
 
 if __name__ == "__main__":
 
     dl_experiments = [
-                      'DRNN',
+#                      'DRNN',
                       'FCN-DAE',
-                      'Vanilla L',
-                      'Vanilla NL',
-                      'Multibranch LANL',
-                      'Multibranch LANLD'
+#                      'Vanilla L',
+#                      'Vanilla NL',
+#                      'Multibranch LANL',
+#                      'Multibranch LANLD'
                       ]
 
     noise_versions = [1, 2]
@@ -43,12 +43,12 @@ if __name__ == "__main__":
         Dataset = dp.Data_Preparation(noise_version=nv)
 
         # Save dataset
-        with open('data/dataset_nv' + str(nv) + '.pkl', 'wb') as output:  # Overwrites any existing file.
+        with open('../data/dataset_nv' + str(nv) + '.pkl', 'wb') as output:  # Overwrites any existing file.
             pickle.dump(Dataset, output)
         print('Dataset saved')
 
         # Load dataset
-        with open('data/dataset_nv' + str(nv) + '.pkl', 'rb') as input:
+        with open('../data/dataset_nv' + str(nv) + '.pkl', 'rb') as input:
             Dataset = pickle.load(input)
 
 
