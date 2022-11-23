@@ -9,7 +9,7 @@
 #
 #===========================================================
 
-import keras
+import tensorflow.keras as keras
 from keras import backend as K
 from keras.callbacks import ModelCheckpoint, ReduceLROnPlateau, EarlyStopping, TensorBoard
 from keras import losses
@@ -135,7 +135,7 @@ def train_dl(Dataset, experiment, signal_size=512):
                                patience=10,
                                verbose=1)
 
-    tb_log_dir = './runs/' + model_label
+    tb_log_dir = '../runs/' + model_label
 
     tboard = TensorBoard(log_dir=tb_log_dir, histogram_freq=0,
                          write_graph=False, write_grads=False,

@@ -9,6 +9,7 @@
 #
 #===========================================================
 
+import re
 import numpy as np
 import _pickle as pickle
 import Prepare_QTDatabase, Prepare_NSTDB
@@ -112,6 +113,7 @@ def Data_Preparation(noise_version=1):
 
     for i in range(len(qtdb_keys)):
         signal_name = qtdb_keys[i]
+        test_name = re.search('(?<=\\\).*', signal_name).group(0)
 
         for b in qtdb[signal_name]:
 
@@ -133,7 +135,7 @@ def Data_Preparation(noise_version=1):
 
             b_np[init_padding:b_sq.shape[0] + init_padding] = b_sq - (b_sq[0] + b_sq[-1]) / 2
 
-            if signal_name in test_set:
+            if test_name in test_set:
                 beats_test.append(b_np)
             else:
                 beats_train.append(b_np)
