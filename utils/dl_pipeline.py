@@ -81,6 +81,21 @@ def train_dl(Dataset, experiment, signal_size=512):
         model = models.deep_filter_model_I_LANL_dilated(signal_size=signal_size)
         model_label = 'Multibranch_LANLD'
 
+    if experiment == 'Attention Skip DAE':
+        model = models.AttentionSkipDAE(signal_size=signal_size)
+        model.build(input_shape=(None, signal_size, 1))
+        model_label = 'Attention_Skip_DAE'
+
+    if experiment == 'ECA Skip DAE':
+        model = models.ECASkipDAE(signal_size=signal_size)
+        model.build(input_shape=(None, signal_size, 1))
+        model_label = 'ECA_Skip_DAE'
+
+    if experiment == 'Vanilla DAE':
+        model = models.VanillaAutoencoder(signal_size=signal_size)
+        model.build(input_shape=(None, signal_size, 1))
+        model_label = 'Vanilla_DAE'
+
 
     print('\n ' + model_label + '\n ')
 
@@ -202,6 +217,21 @@ def test_dl(Dataset, experiment, signal_size=512):
         # Inception-like linear and non linear dilated
         model = models.deep_filter_model_I_LANL_dilated(signal_size=signal_size)
         model_label = 'Multibranch_LANLD'
+
+    if experiment == 'Attention Skip DAE':
+        model = models.AttentionSkipDAE(signal_size=signal_size)
+        model.build(input_shape=(None, signal_size, 1))
+        model_label = 'Attention_Skip_DAE'
+
+    if experiment == 'ECA Skip DAE':
+        model = models.ECASkipDAE(signal_size=signal_size)
+        model.build(input_shape=(None, signal_size, 1))
+        model_label = 'ECA_Skip_DAE'
+
+    if experiment == 'Vanilla DAE':
+        model = models.VanillaAutoencoder(signal_size=signal_size)
+        model.build(input_shape=(None, signal_size, 1))
+        model_label = 'Vanilla_DAE'
 
     print('\n ' + model_label + '\n ')
 
