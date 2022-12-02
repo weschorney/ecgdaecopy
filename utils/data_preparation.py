@@ -39,14 +39,26 @@ def Data_Preparation(noise_version=1):
     # NSTDB
     #####################################
 
-    [bw_signals, _ ] = nstdb
+    [bw_signals, em_signals, ma_signals] = nstdb
     bw_signals = np.array(bw_signals)
+    em_signals = np.array(em_signals)
+    ma_signals = np.array(ma_signals)
 
 
     bw_noise_channel1_a = bw_signals[0:int(bw_signals.shape[0]/2), 0]
     bw_noise_channel1_b = bw_signals[int(bw_signals.shape[0]/2):-1, 0]
     bw_noise_channel2_a = bw_signals[0:int(bw_signals.shape[0]/2), 1]
     bw_noise_channel2_b = bw_signals[int(bw_signals.shape[0]/2):-1, 1]
+
+    em_noise_channel1_a = em_signals[0:int(em_signals.shape[0]/2), 0]
+    em_noise_channel1_b = em_signals[int(em_signals.shape[0]/2):-1, 0]
+    em_noise_channel2_a = em_signals[0:int(em_signals.shape[0]/2), 1]
+    em_noise_channel2_b = em_signals[int(em_signals.shape[0]/2):-1, 1]
+
+    ma_noise_channel1_a = ma_signals[0:int(ma_signals.shape[0]/2), 0]
+    ma_noise_channel1_b = ma_signals[int(ma_signals.shape[0]/2):-1, 0]
+    ma_noise_channel2_a = ma_signals[0:int(ma_signals.shape[0]/2), 1]
+    ma_noise_channel2_b = ma_signals[int(ma_signals.shape[0]/2):-1, 1]
 
 
 
@@ -56,9 +68,17 @@ def Data_Preparation(noise_version=1):
     if noise_version == 1:
         noise_test = bw_noise_channel2_b
         noise_train = bw_noise_channel1_a
+        noise_test2 = em_noise_channel2_b
+        noise_train2 = em_noise_channel1_a
+        noise_test3 = ma_noise_channel2_b
+        noise_train3 = ma_noise_channel1_a
     elif noise_version == 2:
         noise_test = bw_noise_channel1_b
         noise_train = bw_noise_channel2_a
+        noise_test2 = em_noise_channel1_b
+        noise_train2 = em_noise_channel2_a
+        noise_test3 = ma_noise_channel1_b
+        noise_train3 = ma_noise_channel2_a
     else:
         raise Exception("Sorry, noise_version should be 0 or 1")
 
@@ -156,6 +176,9 @@ def Data_Preparation(noise_version=1):
     rnd_train = np.random.randint(low=20, high=200, size=len(beats_train)) / 100
     for i in range(len(beats_train)):
         noise = noise_train[noise_index:noise_index + samples]
+        noise2 = noise_train2[noise_index:noise_index + samples]
+        noise3 = noise_train3[noise_index:noise_index + samples]
+        noise = noise + noise2 + noise3
         beat_max_value = np.max(beats_train[i]) - np.min(beats_train[i])
         noise_max_value = np.max(noise) - np.min(noise)
         Ase = noise_max_value / beat_max_value
@@ -177,6 +200,9 @@ def Data_Preparation(noise_version=1):
 
     for i in range(len(beats_test)):
         noise = noise_test[noise_index:noise_index + samples]
+        noise2 = noise_test2[noise_index:noise_index + samples]
+        noise3 = noise_test3[noise_index:noise_index + samples]
+        noise = noise + noise2 + noise3
         beat_max_value = np.max(beats_test[i]) - np.min(beats_test[i])
         noise_max_value = np.max(noise) - np.min(noise)
         Ase = noise_max_value / beat_max_value
