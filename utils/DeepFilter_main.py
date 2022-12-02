@@ -23,7 +23,6 @@ from metrics import MAD, SSD, PRD, COS_SIM
 from dfilters import FIR_test_Dataset, IIR_test_Dataset
 from dl_pipeline import train_dl, test_dl
 
-
 if __name__ == "__main__":
 
     dl_experiments = [
@@ -37,18 +36,18 @@ if __name__ == "__main__":
 
 #    noise_versions = [1, 2]
 #    for nv in noise_versions:
-        # Data_Preparation() function assumes that QT database and Noise Stress Test Database are uncompresed
-        # inside a folder called data
-
-#COMMENTING OUT TO SAVE MEMORY
+#         #Data_Preparation() function assumes that QT database and Noise Stress Test Database are uncompresed
+#         #inside a folder called data
+#
+##COMMENTING OUT TO SAVE MEMORY
 #        Dataset = dp.Data_Preparation(noise_version=nv)
 #
 #        # Save dataset
 #        with open('../data/dataset_nv' + str(nv) + '.pkl', 'wb') as output:  # Overwrites any existing file.
 #            pickle.dump(Dataset, output)
 #        print('Dataset saved')
-
-        # Load dataset
+#
+#        # Load dataset
 #        with open('../data/dataset_nv' + str(nv) + '.pkl', 'rb') as input:
 #            Dataset = pickle.load(input)
 #
@@ -113,9 +112,9 @@ if __name__ == "__main__":
 #        print('Timing nv ' + str(nv) + ' saved')
 
 
-    ####### LOAD EXPERIMENTS #######
+    ###### LOAD EXPERIMENTS #######
 
-    # Load timing
+    #Load timing
     with open('timing_nv1.pkl', 'rb') as input:
         timing_nv1 = pickle.load(input)
         [train_time_list_nv1, test_time_list_nv1] = timing_nv1
