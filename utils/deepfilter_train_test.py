@@ -12,11 +12,11 @@ from dfilters import FIR_test_Dataset, IIR_test_Dataset
 from dl_pipeline import train_dl, test_dl
 
 EXPERIMENTS = [
+        'CNN-DAE',
+        'Vanilla DAE',
         'DRNN',
         'FCN-DAE',
-        'CNN-DAE',
         'Multibranch LANLD',
-        'Vanilla DAE',
         'ECA Skip DAE',
         'Attention Skip DAE'
         ]
@@ -85,3 +85,6 @@ def train_models(noise_version):
         pickle.dump(timing, output)
     print('Timing nv ' + str(noise_version) + ' saved')
     return
+
+if __name__ == '__main__':
+    train_models(1)

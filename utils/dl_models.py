@@ -15,7 +15,7 @@ import tensorflow.keras as ks
 from tensorflow.keras.models import Sequential, Model
 from tensorflow.keras.layers import Dense, Conv1D, Dropout, BatchNormalization,\
                          concatenate, Input, Conv2DTranspose, Lambda, LSTM,\
-                         Layer, MaxPool1D, Conv1DTranspose
+                         Layer, MaxPool1D, Conv1DTranspose, Flatten
 
 import keras.backend as K
 
@@ -617,14 +617,14 @@ def CNN_DAE(signal_size=512):
                         activation='elu',
                         strides=2,
                         padding='same')
-
+    x = Flatten()(x)
     x = BatchNormalization()(x)
 
     x = Dense(signal_size // 2,
               activation='elu')(x)
 
     x = BatchNormalization()(x)
-    x = Dropout(p=0.5)(x)
+    x = Dropout(rate=0.5)(x)
     
     predictions = Dense(signal_size, activation='linear')(x)
 
@@ -926,6 +926,7 @@ class VanillaAutoencoder(tf.keras.Model):
     def __init__(self, signal_size=512, activation='LeakyReLU'):
         super(VanillaAutoencoder, self).__init__()
         self.model = Sequential([
+                Flatten(),
                 Dense(signal_size // 2, activation=activation),
                 Dense(signal_size // 4, activation=activation),
                 Dense(signal_size // 8, activation=activation),

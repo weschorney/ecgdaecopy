@@ -17,3 +17,6 @@ def prepare_data():
             pickle.dump(Dataset, output)
         print('Dataset saved')
     return
+
+if __name__ == '__main__':
+    prepare_data()

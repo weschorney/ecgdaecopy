@@ -11,7 +11,15 @@ import visualization as vs
 
 from metrics import MAD, SSD, PRD, COS_SIM
 
-EXPERIMENTS = ['DRNN', 'FCN-DAE']
+EXPERIMENTS = [
+        'CNN-DAE',
+        'Vanilla DAE',
+        'DRNN',
+        'FCN-DAE',
+        'Multibranch LANLD',
+        'ECA Skip DAE',
+        'Attention Skip DAE'
+        ]
 
 def load_experiment(experiment_name):
     with open('test_results_' + experiment_name + '_nv1.pkl', 'rb') as input:
@@ -55,8 +63,13 @@ def generate_results():
 
     timing = [train_time_list, test_time_list]
 
-    test_DRNN = load_experiment(EXPERIMENTS[0])
-    test_FCN_DAE = load_experiment(EXPERIMENTS[1])
+    test_CNN_DAE = load_experiment(EXPERIMENTS[0])
+    test_Vanilla_DAE = load_experiment(EXPERIMENTS[1])
+    test_DRNN = load_experiment(EXPERIMENTS[2])
+    test_FCN_DAE = load_experiment(EXPERIMENTS[3])
+    test_Multibranch_LANLD = load_experiment(EXPERIMENTS[4])
+    test_ECADAE = load_experiment(EXPERIMENTS[5])
+    test_ADAE = load_experiment(EXPERIMENTS[6])
 
     # Load Result FIR Filter
     with open('test_results_FIR_nv1.pkl', 'rb') as input:
@@ -84,7 +97,7 @@ def generate_results():
 
     # DL Metrics
 
-    # Exp FCN-DAE
+    # Exp DRNN
 
     [X_test, y_test, y_pred] = test_DRNN
 
@@ -108,6 +121,68 @@ def generate_results():
     PRD_values_DL_FCN_DAE = PRD(y_test, y_pred)
 
     COS_SIM_values_DL_FCN_DAE = COS_SIM(y_test, y_pred)
+
+    # Exp CNN DAE
+
+    [X_test, y_test, y_pred] = test_CNN_DAE
+    y_pred = np.expand_dims(y_pred, -1)
+
+    SSD_values_DL_CNN_DAE = SSD(y_test, y_pred)
+
+    MAD_values_DL_CNN_DAE = MAD(y_test, y_pred)
+
+    PRD_values_DL_CNN_DAE = PRD(y_test, y_pred)
+
+    COS_SIM_values_DL_CNN_DAE = COS_SIM(y_test, y_pred)
+
+    # Exp Vanilla DAE
+
+    [X_test, y_test, y_pred] = test_Vanilla_DAE
+    y_pred = np.expand_dims(y_pred, -1)
+
+    SSD_values_DL_Vanilla_DAE = SSD(y_test, y_pred)
+
+    MAD_values_DL_Vanilla_DAE = MAD(y_test, y_pred)
+
+    PRD_values_DL_Vanilla_DAE = PRD(y_test, y_pred)
+
+    COS_SIM_values_DL_Vanilla_DAE = COS_SIM(y_test, y_pred)
+
+    # Exp Multibranch LANLD
+
+    [X_test, y_test, y_pred] = test_Multibranch_LANLD
+
+    SSD_values_DL_Multibranch_LANLD = SSD(y_test, y_pred)
+
+    MAD_values_DL_Multibranch_LANLD = MAD(y_test, y_pred)
+
+    PRD_values_DL_Multibranch_LANLD = PRD(y_test, y_pred)
+
+    COS_SIM_values_DL_Multibranch_LANLD = COS_SIM(y_test, y_pred)
+
+    # Exp ECA DAE
+
+    [X_test, y_test, y_pred] = test_ECADAE
+
+    SSD_values_DL_ECADAE = SSD(y_test, y_pred)
+
+    MAD_values_DL_ECADAE = MAD(y_test, y_pred)
+
+    PRD_values_DL_ECADAE = PRD(y_test, y_pred)
+
+    COS_SIM_values_DL_ECADAE = COS_SIM(y_test, y_pred)
+
+    # Exp ADAE
+
+    [X_test, y_test, y_pred] = test_ADAE
+
+    SSD_values_DL_ADAE = SSD(y_test, y_pred)
+
+    MAD_values_DL_ADAE = MAD(y_test, y_pred)
+
+    PRD_values_DL_ADAE = PRD(y_test, y_pred)
+
+    COS_SIM_values_DL_ADAE = COS_SIM(y_test, y_pred)
 
     # Digital Filtering
 
@@ -138,37 +213,57 @@ def generate_results():
     ####### Results Visualization #######
 
     SSD_all = [
-               SSD_values_FIR,
-               SSD_values_IIR,
+               SSD_values_DL_CNN_DAE,
+               SSD_values_DL_Vanilla_DAE,
+               SSD_values_DL_DRNN,
                SSD_values_DL_FCN_DAE,
-               SSD_values_DL_DRNN
+               SSD_values_DL_Multibranch_LANLD,
+               SSD_values_DL_ECADAE,
+               SSD_values_DL_ADAE,
+               SSD_values_FIR,
+               SSD_values_IIR
                ]
 
     MAD_all = [
-               MAD_values_FIR,
-               MAD_values_IIR,
+               MAD_values_DL_CNN_DAE,
+               MAD_values_DL_Vanilla_DAE,
+               MAD_values_DL_DRNN,
                MAD_values_DL_FCN_DAE,
-               MAD_values_DL_DRNN
+               MAD_values_DL_Multibranch_LANLD,
+               MAD_values_DL_ECADAE,
+               MAD_values_DL_ADAE,
+               MAD_values_FIR,
+               MAD_values_IIR
                ]
 
     PRD_all = [
-               PRD_values_FIR,
-               PRD_values_IIR,
+               PRD_values_DL_CNN_DAE,
+               PRD_values_DL_Vanilla_DAE,
+               PRD_values_DL_DRNN,
                PRD_values_DL_FCN_DAE,
-               PRD_values_DL_DRNN
+               PRD_values_DL_Multibranch_LANLD,
+               PRD_values_DL_ECADAE,
+               PRD_values_DL_ADAE,
+               PRD_values_FIR,
+               PRD_values_IIR
                ]
 
     COS_SIM_all = [
+                   COS_SIM_values_DL_CNN_DAE,
+                   COS_SIM_values_DL_Vanilla_DAE,
+                   COS_SIM_values_DL_DRNN,
+                   COS_SIM_values_DL_FCN_DAE,
+                   COS_SIM_values_DL_Multibranch_LANLD,
+                   COS_SIM_values_DL_ECADAE,
+                   COS_SIM_values_DL_ADAE,
                    COS_SIM_values_FIR,
                    COS_SIM_values_IIR,
-                   COS_SIM_values_DL_FCN_DAE,
-                   COS_SIM_values_DL_DRNN
                    ]
 
     if timing_names is not None:
-        Exp_names = ['FIR Filter', 'IIR Filter'] + timing_names
+        Exp_names = timing_names
     else:
-        Exp_names = ['FIR Filter', 'IIR Filter'] + EXPERIMENTS
+        Exp_names = EXPERIMENTS + ['FIR Filter', 'IIR Filter']
     
     metrics = ['SSD', 'MAD', 'PRD', 'COS_SIM']
     metric_values = [SSD_all, MAD_all, PRD_all, COS_SIM_all]
@@ -323,7 +418,7 @@ def generate_results():
 
     signal_amount = 10
 
-    [X_test, y_test, y_pred] = test_FCN_DAE
+    [X_test, y_test, y_pred] = test_ADAE
     for id in signals_index:
         ecgbl_signals2plot.append(X_test[id])
         ecg_signals2plot.append(y_test[id])
