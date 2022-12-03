@@ -13,7 +13,12 @@ from dl_pipeline import train_dl, test_dl
 
 EXPERIMENTS = [
         'DRNN',
-        'FCN-DAE'
+        'FCN-DAE',
+        'CNN-DAE',
+        'Multibranch LANLD',
+        'Vanilla DAE',
+        'ECA Skip DAE',
+        'Attention Skip DAE'
         ]
 
 def train_models(noise_version):

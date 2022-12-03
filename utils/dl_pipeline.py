@@ -56,6 +56,10 @@ def train_dl(Dataset, experiment, signal_size=512):
         model = models.FCN_DAE(signal_size=signal_size)
         model_label = 'FCN_DAE'
 
+    if experiment == 'CNN-DAE':
+        model = models.CNN_DAE(signal_size=signal_size)
+        model_label = 'CNN_DAE'
+
     if experiment == 'DRNN':
         # DRNN
         model = models.DRRN_denoising(signal_size=signal_size)
@@ -192,6 +196,10 @@ def test_dl(Dataset, experiment, signal_size=512):
         # FCN_DAE
         model = models.FCN_DAE(signal_size=signal_size)
         model_label = 'FCN_DAE'
+
+    if experiment == 'CNN-DAE':
+        model = models.CNN_DAE(signal_size=signal_size)
+        model_label = 'CNN_DAE'
 
     if experiment == 'DRNN':
         # DRNN
