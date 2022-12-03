@@ -38,11 +38,20 @@ def generate_results():
     train_time_list = []
     test_time_list = []
 
-    for i in range(len(train_time_list_nv1)):
-        train_time_list.append(train_time_list_nv1[i] + train_time_list_nv2[i])
-
-    for i in range(len(test_time_list_nv1)):
-        test_time_list.append(test_time_list_nv1[i] + test_time_list_nv2[i])
+    if isinstance(train_time_list_nv1, list):
+        timing_names = None
+        for i in range(len(train_time_list_nv1)):
+            train_time_list.append(train_time_list_nv1[i] + train_time_list_nv2[i])
+    
+        for i in range(len(test_time_list_nv1)):
+            test_time_list.append(test_time_list_nv1[i] + test_time_list_nv2[i])
+    else:
+        #assume it's a dict
+        timing_names = []
+        for key in train_time_list_nv1.keys():
+            train_time_list.append(train_time_list_nv1[key] + train_time_list_nv2[key])
+            test_time_list.append(test_time_list_nv1[key] + test_time_list_nv2[key])
+            timing_names.append(key)
 
     timing = [train_time_list, test_time_list]
 
@@ -156,8 +165,10 @@ def generate_results():
                    COS_SIM_values_DL_DRNN
                    ]
 
-
-    Exp_names = ['FIR Filter', 'IIR Filter'] + EXPERIMENTS
+    if timing_names is not None:
+        Exp_names = ['FIR Filter', 'IIR Filter'] + timing_names
+    else:
+        Exp_names = ['FIR Filter', 'IIR Filter'] + EXPERIMENTS
     
     metrics = ['SSD', 'MAD', 'PRD', 'COS_SIM']
     metric_values = [SSD_all, MAD_all, PRD_all, COS_SIM_all]
