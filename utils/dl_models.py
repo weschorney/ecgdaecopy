@@ -751,6 +751,49 @@ class AttentionBlock(Layer):
         output = self.maxpool(output)
         return output
 
+class AttentionBlockBN(Layer):
+    def __init__(self, signal_size, channels, kernel_size=16,
+                 input_size=None):
+        super(AttentionBlockBN, self).__init__()
+        if input_size is not None:
+            self.conv = Conv1D(
+                channels,
+                kernel_size,
+                input_shape=input_size,
+                padding='same',
+                activation=None
+            )
+        else:
+            self.conv = Conv1D(
+                channels,
+                kernel_size,
+                padding='same',
+                activation=None
+            )
+        self.activation = tf.keras.layers.LeakyReLU()
+        self.bn = BatchNormalization()
+        self.attention = CBAM(
+            1,
+            3,
+            (channels, 1),
+            False,
+            1,
+            signal_size + 1,
+            (signal_size, 1),
+            False
+        )
+        self.maxpool = MaxPool1D(
+            padding='same',
+            strides=2
+        )
+
+    def call(self, x):
+        output = self.conv(x)
+        output = self.activation(self.bn(output))
+        output = self.attention(output)
+        output = self.maxpool(output)
+        return output
+
 class EncoderBlock(Layer):
     def __init__(self, signal_size, channels, kernel_size=16,
                  input_size=None, activation='LeakyReLU'):
@@ -806,6 +849,42 @@ class AttentionDeconv(tf.keras.layers.Layer):
     def call(self, x):
         output = self.attention(self.deconv(x))
         return output
+
+class AttentionDeconvBN(tf.keras.layers.Layer):
+    def __init__(self, signal_size, channels, kernel_size=16,
+                 input_size=None, activation='LeakyReLU',
+                 strides=2, padding='same'):
+        super(AttentionDeconvBN, self).__init__()
+        self.deconv = Conv1DTranspose(
+            channels,
+            kernel_size,
+            strides=strides,
+            padding=padding,
+        )
+        self.bn = BatchNormalization()
+        if activation == 'LeakyReLU':
+            self.activation = tf.keras.layers.LeakyReLU()
+        else:
+            self.activation = None
+        self.attention = CBAM(
+            1,
+            3,
+            (channels, 1),
+            False,
+            1,
+            signal_size + 1,
+            (signal_size, 1),
+            False
+        )
+
+    def call(self, x):
+        output = self.deconv(x)
+        output = self.bn(output)
+        if self.activation is not None:
+            output = self.activation(output)
+        output = self.attention(output)
+        return output
+
 
 class AttentionDeconvECA(tf.keras.layers.Layer):
     def __init__(self, signal_size, channels, kernel_size=16,
@@ -939,3 +1018,46 @@ class VanillaAutoencoder(tf.keras.Model):
 
     def call(self, x):
         return self.model(x)
+
+class AttentionSkipDAE2(tf.keras.Model):
+    def __init__(self, signal_size=512):
+        super(AttentionSkipDAE2, self).__init__()
+        self.b1 = AttentionBlockBN(signal_size, 16, input_size=(signal_size, 1))
+        self.b2 = AttentionBlockBN(signal_size//2, 32)
+        self.b3 = AttentionBlockBN(signal_size//4, 64)
+        self.b4 = AttentionBlockBN(signal_size//8, 64)
+        self.b5 = AttentionBlockBN(signal_size//16, 1) #32
+        self.d5 = AttentionDeconvBN(signal_size//16, 64)
+        self.d4 = AttentionDeconvBN(signal_size//8, 64)
+        self.d3 = AttentionDeconvBN(signal_size//4, 32)
+        self.d2 = AttentionDeconvBN(signal_size//2, 16)
+        self.d1 = AttentionDeconvBN(signal_size, 1, activation='linear')
+
+    def encode(self, x):
+        encoded = self.b1(x)
+        encoded = self.b2(encoded)
+        encoded = self.b3(encoded)
+        encoded = self.b4(encoded)
+        encoded = self.b5(encoded)
+        return encoded
+
+    def decode(self, x):
+        decoded = self.d5(x)
+        decoded = self.d4(decoded)
+        decoded = self.d3(decoded)
+        decoded = self.d2(decoded)
+        decoded = self.d1(decoded)
+        return decoded
+
+    def call(self, x):
+        enc1 = self.b1(x)
+        enc2 = self.b2(enc1)
+        enc3 = self.b3(enc2)
+        enc4 = self.b4(enc3)
+        enc5 = self.b5(enc4)
+        dec5 = self.d5(enc5)
+        dec4 = self.d4(dec5 + enc4)
+        dec3 = self.d3(dec4 + enc3)
+        dec2 = self.d2(dec3 + enc2)
+        dec1 = self.d1(dec2 + enc1)
+        return dec1

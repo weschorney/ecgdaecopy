@@ -86,7 +86,7 @@ def train_dl(Dataset, experiment, signal_size=512):
         model_label = 'Multibranch_LANLD'
 
     if experiment == 'Attention Skip DAE':
-        model = models.AttentionSkipDAE(signal_size=signal_size)
+        model = models.AttentionSkipDAE2(signal_size=signal_size)
         model.build(input_shape=(None, signal_size, 1))
         model_label = 'Attention_Skip_DAE'
 
@@ -227,7 +227,7 @@ def test_dl(Dataset, experiment, signal_size=512):
         model_label = 'Multibranch_LANLD'
 
     if experiment == 'Attention Skip DAE':
-        model = models.AttentionSkipDAE(signal_size=signal_size)
+        model = models.AttentionSkipDAE2(signal_size=signal_size)
         model.build(input_shape=(None, signal_size, 1))
         model_label = 'Attention_Skip_DAE'
 

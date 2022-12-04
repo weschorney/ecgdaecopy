@@ -191,8 +191,8 @@ def generate_table_time(column_names, all_values, Exp_names, gpu=True):
 
     # The FIR and IIR are the last on all_values
     # We need circular shift them to the right
-    all_values[0] = all_values[0][-2::] + all_values[0][0:-2]
-    all_values[1] = all_values[1][-2::] + all_values[1][0:-2]
+    #all_values[0] = all_values[0][-2::] + all_values[0][0:-2]
+    #all_values[1] = all_values[1][-2::] + all_values[1][0:-2]
 
     tb = PrettyTable()
     ind = 0
