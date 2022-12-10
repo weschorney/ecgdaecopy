@@ -447,7 +447,7 @@ def generate_results():
     #make ecg plots
     test_outputs = [test_ADAE, test_DRNN, test_Multibranch_LANLD, test_IIR,
                     test_ECADAE, test_FCN_DAE]
-    models_list = ['CBAM-DAE', 'DRNN', 'DeepFilter', 'IIR',
+    models_list = ['CBAM-DAE', 'DRNN', 'Multibranch LANLD', 'IIR',
                    'ACDAE', 'FCN-DAE']
     #index 9582 is sel820
     generate_figs(test_outputs, models_list,
@@ -464,8 +464,8 @@ def make_figure(values, metrics_list, labels_list,
     #make the legend info
     values = get_values_plot(values, start_index=start_index, n=n)
     legend_info = []
-    for metric, label in zip(metrics_list, labels_list):
-        leg_inf = f'{label} = {metric}'
+    for metric, label2 in zip(metrics_list, labels_list):
+        leg_inf = f'{label2} = {metric}'
         legend_info.append(leg_inf)
     vs.ecg_plot(values, legend_info, label=label, **kwargs)
     return
@@ -495,7 +495,7 @@ def generate_figs(test_outputs, models_list,
         cs = round(COS_SIM(y_test2, y_pred2).mean(), 3)
         metric_list = [ssd, mad, prd, cs]
         make_figure(y_pred, metric_list, labels_list, start_index=start_index,
-                    n=n, title=f'Filtered ECG using {model}',
+                    n=n, title=f'Filtered ECG using {model}', label=model,
                     savename=f'ecg_{model}.png')
     return
 
