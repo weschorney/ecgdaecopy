@@ -218,4 +218,19 @@ def generate_table_time(column_names, all_values, Exp_names, gpu=True):
     print(tb)
 
     if gpu:
-        print('* For FIR and IIR Filters is CPU since scipy filters are CPU based implementations')
+        print('* For FIR and IIR Filters is CPU since scipy filters are CPU based implementation￼s')
+
+def ecg_plot(values, legend_info, label='', **kwargs):
+    fig, ax = plt.subplots(figsize=(16, 9))
+    plt.plot(values, label=label)
+    for info in legend_info:
+        plt.plot([],[], ' ', label=info)
+    plt.grid()
+    plt.ylabel('Amplitude (au)')
+    plt.xlabel('samples')
+    plt.legend(loc='upper right')
+    plt.title(kwargs.get('title', ''))
+    savename = kwargs.get('savename', '')
+    if savename:
+        plt.savefig(savename, dpi=450)
+    return
