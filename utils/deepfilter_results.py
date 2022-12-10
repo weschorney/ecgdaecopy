@@ -11,6 +11,7 @@ import visualization as vs
 
 from metrics import MAD, SSD, PRD, COS_SIM
 
+
 EXPERIMENTS = [
         'CNN-DAE',
         'Vanilla DAE',
@@ -442,6 +443,60 @@ def generate_results():
                          ecg_f=fil_signals2plot[i],
                          signal_name=None,
                          beat_no=None)
+
+    #make ecg plots
+    test_outputs = [test_ADAE, test_DRNN, test_Multibranch_LANLD, test_IIR,
+                    test_ECADAE, test_FCN_DAE]
+    models_list = ['CBAM-DAE', 'DRNN', 'DeepFilter', 'IIR',
+                   'ACDAE', 'FCN-DAE']
+    #index 9582 is sel820
+    generate_figs(test_outputs, models_list,
+                  start_index=9582, n=8)
+    return
+
+def get_values_plot(values, start_index=1000, n=8):
+    vals = values[start_index:(start_index+n),...]
+    vals = vals.reshape(n*512)
+    return vals
+
+def make_figure(values, metrics_list, labels_list,
+                label='', start_index=1000, n=8, **kwargs):
+    #make the legend info
+    values = get_values_plot(values, start_index=start_index, n=n)
+    legend_info = []
+    for metric, label in zip(metrics_list, labels_list):
+        leg_inf = f'{label} = {metric}'
+        legend_info.append(leg_inf)
+    vs.ecg_plot(values, legend_info, label=label, **kwargs)
+    return
+
+def generate_figs(test_outputs, models_list,
+                  start_index=1000, n=8, **kwargs):
+    #hardcode label for now
+    #first make one plot of baseline + noise added
+    labels_list = ['SSD', 'MAD', 'PRD', 'COS_SIM']
+    plot_base_noise = False
+    for test_output, model in zip(test_outputs, models_list):
+        if not plot_base_noise:
+            #make baseline plots
+            X_test, y_test, y_pred = test_output
+            make_figure(X_test, [], [], label='',
+                        start_index=start_index, n=n,
+                        title='ECG + Noise', savename='ecg_noise.png')
+            make_figure(y_test, [], [], label='', start_index=start_index,
+                        n=n, title='Original ECG Signal', savename='ecg_orig.png')
+            plot_base_noise = True
+        _, y_test, y_pred = test_output
+        y_test2 = y_test[start_index:(start_index+n),...]
+        y_pred2 = y_pred[start_index:(start_index+n),...]
+        ssd = round(SSD(y_test2, y_pred2).sum(), 3)
+        mad = round(MAD(y_test2, y_pred2).max(), 3)
+        prd = round(PRD(y_test2, y_pred2).mean(), 3)
+        cs = round(COS_SIM(y_test2, y_pred2).mean(), 3)
+        metric_list = [ssd, mad, prd, cs]
+        make_figure(y_pred, metric_list, labels_list, start_index=start_index,
+                    n=n, title=f'Filtered ECG using {model}',
+                    savename=f'ecg_{model}.png')
     return
 
 if __name__ == '__main__':

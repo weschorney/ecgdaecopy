@@ -117,7 +117,7 @@ def train_dl(Dataset, experiment, signal_size=512):
     if experiment == 'DRNN':
         criterion = keras.losses.mean_squared_error
 
-    elif experiment == 'FCN-DAE' or experiment == 'CNN-DAE':
+    elif experiment == 'FCN-DAE' or experiment == 'CNN-DAE' or experiment == 'ECA Skip DAE' or experiment == 'Vanilla DAE':
         criterion = ssd_loss
 
     else:
@@ -249,7 +249,7 @@ def test_dl(Dataset, experiment, signal_size=512):
     if experiment == 'DRNN':
         criterion = 'mse'
 
-    elif experiment == 'FCN-DAE' or experiment == 'CNN-DAE':
+    elif experiment == 'FCN-DAE' or experiment == 'CNN-DAE' or experiment == 'ECA Skip DAE' or experiment == 'Vanilla DAE':
         criterion = ssd_loss
 
     else:

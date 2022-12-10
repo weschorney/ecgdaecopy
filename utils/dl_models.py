@@ -772,6 +772,7 @@ class AttentionBlockBN(Layer):
             )
         self.activation = tf.keras.layers.LeakyReLU()
         self.bn = BatchNormalization()
+        self.dp = Dropout(rate=0.1)
         self.attention = CBAM(
             1,
             3,
@@ -790,6 +791,7 @@ class AttentionBlockBN(Layer):
     def call(self, x):
         output = self.conv(x)
         output = self.activation(self.bn(output))
+        output = self.dp(output)
         output = self.attention(output)
         output = self.maxpool(output)
         return output
@@ -866,6 +868,7 @@ class AttentionDeconvBN(tf.keras.layers.Layer):
             self.activation = tf.keras.layers.LeakyReLU()
         else:
             self.activation = None
+        self.dp = Dropout(rate=0.1)
         self.attention = CBAM(
             1,
             3,
@@ -882,9 +885,9 @@ class AttentionDeconvBN(tf.keras.layers.Layer):
         output = self.bn(output)
         if self.activation is not None:
             output = self.activation(output)
+        output = self.dp(output)
         output = self.attention(output)
         return output
-
 
 class AttentionDeconvECA(tf.keras.layers.Layer):
     def __init__(self, signal_size, channels, kernel_size=16,
