@@ -8,9 +8,17 @@ Created on Thu Dec  1 20:07:09 2022
 import pickle
 import numpy as np
 import visualization as vs
+import matplotlib.pyplot as plt
 
 from metrics import MAD, SSD, PRD, COS_SIM
 
+
+#use LaTeX like font styling, takes considerably longer for plotting
+plt.rcParams.update({
+        'text.usetex':True,
+        'font.family':'Helvetica',
+        'font.size':18
+        })
 
 EXPERIMENTS = [
         'CNN-DAE',
@@ -462,19 +470,25 @@ def get_values_plot(values, start_index=1000, n=8):
 def make_figure(values, metrics_list, labels_list,
                 label='', start_index=1000, n=8, **kwargs):
     #make the legend info
+    original = kwargs.get('original', None)
+    title = kwargs.get('title', '')
+    savename = kwargs.get('savename', '')
+    if original is not None:
+        original = get_values_plot(original, start_index=start_index, n=n)
     values = get_values_plot(values, start_index=start_index, n=n)
     legend_info = []
     for metric, label2 in zip(metrics_list, labels_list):
         leg_inf = f'{label2} = {metric}'
         legend_info.append(leg_inf)
-    vs.ecg_plot(values, legend_info, label=label, **kwargs)
+    vs.ecg_plot(values, legend_info, label=label, original=original,
+                title=title, savename=savename)
     return
 
 def generate_figs(test_outputs, models_list,
                   start_index=1000, n=8, **kwargs):
     #hardcode label for now
     #first make one plot of baseline + noise added
-    labels_list = ['SSD', 'MAD', 'PRD', 'COS_SIM']
+    labels_list = ['SSD', 'MAD', 'PRD', 'COS\_SIM']
     plot_base_noise = False
     for test_output, model in zip(test_outputs, models_list):
         if not plot_base_noise:
@@ -496,7 +510,7 @@ def generate_figs(test_outputs, models_list,
         metric_list = [ssd, mad, prd, cs]
         make_figure(y_pred, metric_list, labels_list, start_index=start_index,
                     n=n, title=f'Filtered ECG using {model}', label=model,
-                    savename=f'ecg_{model}.png')
+                    savename=f'ecg_{model}.png', original=y_test)
     return
 
 if __name__ == '__main__':

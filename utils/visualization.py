@@ -221,7 +221,10 @@ def generate_table_time(column_names, all_values, Exp_names, gpu=True):
         print('* For FIR and IIR Filters is CPU since scipy filters are CPU based implementation￼s')
 
 def ecg_plot(values, legend_info, label='', **kwargs):
+    original_ecg = kwargs.get('original', None)
     fig, ax = plt.subplots(figsize=(16, 9))
+    if original_ecg is not None:
+        plt.plot(original_ecg, label='Original ECG')
     plt.plot(values, label=label)
     for info in legend_info:
         plt.plot([],[], ' ', label=info)
