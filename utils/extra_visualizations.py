@@ -52,7 +52,7 @@ def full_plot(model, dataset_name, idx=None, efig_pref='encoder_output',
     dfig_pref = '../data/figures/' + dfig_pref
     if not os.path.exists('../data/figures/'):
         os.makedirs('../data/figures/')
-    plot_model_output(inp_ele, '../data/figures/initial.png')
+    plot_model_output(inp_ele, '../data/figures/initial.png', alpha=1.0)
     #bruuuuuuuuuuuuuuuuuute force
     out_ele = model.b1(inp_ele)
     plot_model_output(out_ele, efig_pref+'0.png')
@@ -75,7 +75,7 @@ def full_plot(model, dataset_name, idx=None, efig_pref='encoder_output',
     out_ele = model.d1(out_ele)
     plot_model_output(out_ele, dfig_pref+'0.png')
     out_ele = model(inp_ele)
-    plot_model_output(out_ele, '../data/figures/output.png')
+    plot_model_output(out_ele, '../data/figures/output.png', alpha=1.0)
     return
 
 if __name__ == '__main__':
