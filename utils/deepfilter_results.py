@@ -454,9 +454,9 @@ def generate_results():
 
     #make ecg plots
     test_outputs = [test_ADAE, test_DRNN, test_Multibranch_LANLD, test_IIR,
-                    test_ECADAE, test_FCN_DAE]
+                    test_ECADAE, test_FCN_DAE, test_Vanilla_DAE, test_CNN_DAE]
     models_list = ['CBAM-DAE', 'DRNN', 'Multibranch LANLD', 'IIR',
-                   'ACDAE', 'FCN-DAE']
+                   'ACDAE', 'FCDAE', 'DAE', 'CDAE']
     #index 9582 is sel820
     generate_figs(test_outputs, models_list,
                   start_index=9582, n=8)
@@ -503,6 +503,8 @@ def generate_figs(test_outputs, models_list,
         _, y_test, y_pred = test_output
         y_test2 = y_test[start_index:(start_index+n),...]
         y_pred2 = y_pred[start_index:(start_index+n),...]
+        if model == 'DAE' or model == 'CDAE':
+            y_pred2 = y_pred2.reshape((8, 512, 1))
         ssd = round(SSD(y_test2, y_pred2).sum(), 3)
         mad = round(MAD(y_test2, y_pred2).max(), 3)
         prd = round(PRD(y_test2, y_pred2).mean(), 3)
