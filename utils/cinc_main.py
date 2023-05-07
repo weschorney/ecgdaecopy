@@ -109,92 +109,43 @@ if __name__ == "__main__":
     #TODO: ADD OTHER MODELS AND ONLY ONE TEST
 
     # Load Results DRNN
-    with open('test_results_' + dl_experiments[0] + '_nv1.pkl', 'rb') as input:
-        test_DRNN_nv1 = pickle.load(input)
-    with open('test_results_' + dl_experiments[0] + '_nv2.pkl', 'rb') as input:
-        test_DRNN_nv2 = pickle.load(input)
-
-    test_DRNN = [np.concatenate((test_DRNN_nv1[0], test_DRNN_nv2[0])),
-                 np.concatenate((test_DRNN_nv1[1], test_DRNN_nv2[1])),
-                 np.concatenate((test_DRNN_nv1[2], test_DRNN_nv2[2]))]
-
+    with open('cinc_test_results_' + dl_experiments[0] + '.pkl', 'rb') as input:
+        test_DRNN = pickle.load(input)
     # Load Results FCN_DAE
-    with open('test_results_' + dl_experiments[1] + '_nv1.pkl', 'rb') as input:
-        test_FCN_DAE_nv1 = pickle.load(input)
-    with open('test_results_' + dl_experiments[1] + '_nv2.pkl', 'rb') as input:
-        test_FCN_DAE_nv2 = pickle.load(input)
-
-    test_FCN_DAE = [np.concatenate((test_FCN_DAE_nv1[0], test_FCN_DAE_nv2[0])),
-                    np.concatenate((test_FCN_DAE_nv1[1], test_FCN_DAE_nv2[1])),
-                    np.concatenate((test_FCN_DAE_nv1[2], test_FCN_DAE_nv2[2]))]
-
+    with open('cinc_test_results_' + dl_experiments[1] + '.pkl', 'rb') as input:
+        test_FCN_DAE = pickle.load(input)
     # Load Results Vanilla L
-    with open('test_results_' + dl_experiments[2] + '_nv1.pkl', 'rb') as input:
-        test_Vanilla_L_nv1 = pickle.load(input)
-    with open('test_results_' + dl_experiments[2] + '_nv2.pkl', 'rb') as input:
-        test_Vanilla_L_nv2 = pickle.load(input)
-
-    test_Vanilla_L = [np.concatenate((test_Vanilla_L_nv1[0], test_Vanilla_L_nv2[0])),
-                      np.concatenate((test_Vanilla_L_nv1[1], test_Vanilla_L_nv2[1])),
-                      np.concatenate((test_Vanilla_L_nv1[2], test_Vanilla_L_nv2[2]))]
-
+    with open('cinc_test_results_' + dl_experiments[2] + '.pkl', 'rb') as input:
+        test_Vanilla_L = pickle.load(input)
     # Load Results Exp Vanilla NL
-    with open('test_results_' + dl_experiments[3] + '_nv1.pkl', 'rb') as input:
-        test_Vanilla_NL_nv1 = pickle.load(input)
-    with open('test_results_' + dl_experiments[3] + '_nv2.pkl', 'rb') as input:
-        test_Vanilla_NL_nv2 = pickle.load(input)
-
-    test_Vanilla_NL = [np.concatenate((test_Vanilla_NL_nv1[0], test_Vanilla_NL_nv2[0])),
-                       np.concatenate((test_Vanilla_NL_nv1[1], test_Vanilla_NL_nv2[1])),
-                       np.concatenate((test_Vanilla_NL_nv1[2], test_Vanilla_NL_nv2[2]))]
-
+    with open('cinc_test_results_' + dl_experiments[3] + '.pkl', 'rb') as input:
+        test_Vanilla_NL = pickle.load(input)
     # Load Results Multibranch LANL
-    with open('test_results_' + dl_experiments[4] + '_nv1.pkl', 'rb') as input:
-        test_Multibranch_LANL_nv1 = pickle.load(input)
-    with open('test_results_' + dl_experiments[4] + '_nv2.pkl', 'rb') as input:
-        test_Multibranch_LANL_nv2 = pickle.load(input)
-
-    test_Multibranch_LANL = [np.concatenate((test_Multibranch_LANL_nv1[0], test_Multibranch_LANL_nv2[0])),
-                             np.concatenate((test_Multibranch_LANL_nv1[1], test_Multibranch_LANL_nv2[1])),
-                             np.concatenate((test_Multibranch_LANL_nv1[2], test_Multibranch_LANL_nv2[2]))]
-
+    with open('cinc_test_results_' + dl_experiments[4] + '.pkl', 'rb') as input:
+        test_Multibranch_LANL = pickle.load(input)
     # Load Results Multibranch LANLD
-    with open('test_results_' + dl_experiments[5] + '_nv1.pkl', 'rb') as input:
-        test_Multibranch_LANLD_nv1 = pickle.load(input)
-    with open('test_results_' + dl_experiments[5] + '_nv2.pkl', 'rb') as input:
-        test_Multibranch_LANLD_nv2 = pickle.load(input)
-
-    test_Multibranch_LANLD = [np.concatenate((test_Multibranch_LANLD_nv1[0], test_Multibranch_LANLD_nv2[0])),
-                              np.concatenate((test_Multibranch_LANLD_nv1[1], test_Multibranch_LANLD_nv2[1])),
-                              np.concatenate((test_Multibranch_LANLD_nv1[2], test_Multibranch_LANLD_nv2[2]))]
-
+    with open('cinc_test_results_' + dl_experiments[5] + '.pkl', 'rb') as input:
+        test_Multibranch_LANLD = pickle.load(input)
+    #load atskipdae
+    with open('cinc_test_results_' + dl_experiments[6] + '.pkl', 'rb') as input:
+        test_CBAM_DAE = pickle.load(input)
+    #load eca
+    with open('cinc_test_results_' + dl_experiments[7] + '.pkl', 'rb') as input:
+        test_ACDAE = pickle.load(input)
+    #load vanilla
+    with open('cinc_test_results_' + dl_experiments[8] + '.pkl', 'rb') as input:
+        test_Vanilla_DAE = pickle.load(input)
     # Load Result FIR Filter
-    with open('test_results_FIR_nv1.pkl', 'rb') as input:
-        test_FIR_nv1 = pickle.load(input)
-    with open('test_results_FIR_nv2.pkl', 'rb') as input:
-        test_FIR_nv2 = pickle.load(input)
-
-    test_FIR = [np.concatenate((test_FIR_nv1[0], test_FIR_nv2[0])),
-                np.concatenate((test_FIR_nv1[1], test_FIR_nv2[1])),
-                np.concatenate((test_FIR_nv1[2], test_FIR_nv2[2]))]
-
+    with open('cinc_test_results_FIR.pkl', 'rb') as input:
+        test_FIR = pickle.load(input)
     # Load Result IIR Filter
-    with open('test_results_IIR_nv1.pkl', 'rb') as input:
-        test_IIR_nv1 = pickle.load(input)
-    with open('test_results_IIR_nv2.pkl', 'rb') as input:
-        test_IIR_nv2 = pickle.load(input)
-
-    test_IIR = [np.concatenate((test_IIR_nv1[0], test_IIR_nv2[0])),
-                np.concatenate((test_IIR_nv1[1], test_IIR_nv2[1])),
-                np.concatenate((test_IIR_nv1[2], test_IIR_nv2[2]))]
-
+    with open('cinc_test_results_IIR.pkl', 'rb') as input:
+        test_IIR = pickle.load(input)
     ####### Calculate Metrics #######
-
     print('Calculating metrics ...')
-
     # DL Metrics
 
-    # Exp FCN-DAE
+    # Exp DRNN
 
     [X_test, y_test, y_pred] = test_DRNN
 
@@ -271,6 +222,41 @@ if __name__ == "__main__":
 
     COS_SIM_values_DL_exp_4 = COS_SIM(y_test, y_pred)
 
+    # CBAM-DAE
+
+    [X_test, y_test, y_pred] = test_CBAM_DAE
+
+    SSD_values_CBAM_DAE = SSD(y_test, y_pred)
+
+    MAD_values_CBAM_DAE = MAD(y_test, y_pred)
+
+    PRD_values_CBAM_DAE = PRD(y_test, y_pred)
+
+    COS_SIM_values_CBAM_DAE = COS_SIM(y_test, y_pred)
+
+    # ACDAE
+
+    [X_test, y_test, y_pred] = test_ACDAE
+
+    SSD_values_ACDAE = SSD(y_test, y_pred)
+
+    MAD_values_ACDAE = MAD(y_test, y_pred)
+
+    PRD_values_ACDAE = PRD(y_test, y_pred)
+
+    COS_SIM_values_ACDAE = COS_SIM(y_test, y_pred)
+
+    # Vanilla DAE
+
+    [X_test, y_test, y_pred] = test_Vanilla_DAE
+
+    SSD_values_Vanilla_DAE = SSD(y_test, y_pred)
+
+    MAD_values_Vanilla_DAE = MAD(y_test, y_pred)
+
+    PRD_values_Vanilla_DAE = PRD(y_test, y_pred)
+
+    COS_SIM_values_Vanilla_DAE = COS_SIM(y_test, y_pred)
 
     # Digital Filtering
 
@@ -308,6 +294,9 @@ if __name__ == "__main__":
                SSD_values_DL_exp_2,
                SSD_values_DL_exp_3,
                SSD_values_DL_exp_4,
+               SSD_values_CBAM_DAE,
+               SSD_values_ACDAE,
+               SSD_values_Vanilla_DAE
                ]
 
     MAD_all = [MAD_values_FIR,
@@ -318,6 +307,9 @@ if __name__ == "__main__":
                MAD_values_DL_exp_2,
                MAD_values_DL_exp_3,
                MAD_values_DL_exp_4,
+               MAD_values_CBAM_DAE,
+               MAD_values_ACDAE,
+               MAD_values_Vanilla_DAE
                ]
 
     PRD_all = [PRD_values_FIR,
@@ -328,6 +320,9 @@ if __name__ == "__main__":
                PRD_values_DL_exp_2,
                PRD_values_DL_exp_3,
                PRD_values_DL_exp_4,
+               PRD_values_CBAM_DAE,
+               PRD_values_ACDAE,
+               PRD_values_Vanilla_DAE
                ]
 
     COS_SIM_all = [COS_SIM_values_FIR,
@@ -338,6 +333,9 @@ if __name__ == "__main__":
                    COS_SIM_values_DL_exp_2,
                    COS_SIM_values_DL_exp_3,
                    COS_SIM_values_DL_exp_4,
+                   COS_SIM_values_CBAM_DAE,
+                   COS_SIM_values_ACDAE,
+                   COS_SIM_values_Vanilla_DAE
                    ]
 
 
