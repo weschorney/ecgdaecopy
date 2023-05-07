@@ -38,7 +38,7 @@ def mad_loss(y_true, y_pred):
     return K.max(K.square(y_pred - y_true), axis=-2)
 
 
-def train_dl(Dataset, experiment, signal_size=512):
+def train_dl(Dataset, experiment, signal_size=512, ds=''):
 
     print('Deep Learning pipeline: Training the model for exp ' + str(experiment))
 
@@ -131,7 +131,7 @@ def train_dl(Dataset, experiment, signal_size=512):
     # Keras Callbacks
 
     # checkpoint
-    model_filepath = model_label + '_weights.best.hdf5'
+    model_filepath = model_label + f'{ds}_weights.best.hdf5'
 
     checkpoint = ModelCheckpoint(model_filepath,
                                  monitor="val_loss",
@@ -180,7 +180,7 @@ def train_dl(Dataset, experiment, signal_size=512):
 
 
 
-def test_dl(Dataset, experiment, signal_size=512):
+def test_dl(Dataset, experiment, signal_size=512, ds=''):
 
     print('Deep Learning pipeline: Testing the model')
 
@@ -260,7 +260,7 @@ def test_dl(Dataset, experiment, signal_size=512):
                   metrics=[losses.mean_squared_error, losses.mean_absolute_error, ssd_loss, mad_loss])
 
     # checkpoint
-    model_filepath = model_label + '_weights.best.hdf5'
+    model_filepath = model_label + f'{ds}_weights.best.hdf5'
     # load weights
     model.load_weights(model_filepath)
 
