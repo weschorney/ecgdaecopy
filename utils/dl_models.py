@@ -791,7 +791,7 @@ class AttentionBlockBN(Layer):
             )
         self.activation = tf.keras.layers.LeakyReLU()
         self.bn = BatchNormalization()
-        self.dp = Dropout(rate=0.001)
+        self.dp = Dropout(rate=0.001) #rate=0.1 for qtdb
         self.attention = CBAM(
             1,
             3,
@@ -887,7 +887,7 @@ class AttentionDeconvBN(tf.keras.layers.Layer):
             self.activation = tf.keras.layers.LeakyReLU()
         else:
             self.activation = None
-        self.dp = Dropout(rate=0.001)
+        self.dp = Dropout(rate=0.001) #rate=0.1 for qtdb
         self.attention = CBAM(
             1,
             3,
