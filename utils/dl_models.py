@@ -648,9 +648,9 @@ def DRRN_denoising(signal_size=512):
 ############## IMPLEMENT SPATIAL #######################
 ########################################################
 
-class SpatialGate(Layer):
+class SpatialGateDep(Layer):
     def __init__(self, filters, kernel_size, input_shape=None, activation='sigmoid', transpose=False):
-        super(SpatialGate, self).__init__()
+        super(SpatialGateDep, self).__init__()
         self.transpose = transpose
         self.conv = Conv1D(filters, kernel_size, input_shape=input_shape, activation=activation)
 
@@ -661,6 +661,25 @@ class SpatialGate(Layer):
         avg_ = tf.reduce_mean(x, axis=-1, keepdims=True)
         max_ = tf.reduce_max(x, axis=-1, keepdims=True)
         x = tf.concat([avg_, max_], axis=1)
+        out = self.conv(x)
+        if self.transpose:
+            out = tf.transpose(out, [0, 2, 1])
+        return out
+
+class SpatialGate(Layer):
+    def __init__(self, filters, kernel_size, input_shape=None, activation='sigmoid', transpose=False):
+        super(SpatialGate, self).__init__()
+        self.transpose = transpose
+        self.conv = Conv1D(filters, kernel_size, padding='same',
+                           input_shape=input_shape, activation=activation)
+
+    def call(self, x):
+        #if transpose, switch the data to (batch, steps, channels)
+        if self.transpose:
+            x = tf.transpose(x, [0, 2, 1])
+        avg_ = tf.reduce_mean(x, axis=-1, keepdims=True)
+        max_ = tf.reduce_max(x, axis=-1, keepdims=True)
+        x = tf.concat([avg_, max_], axis=-1)
         out = self.conv(x)
         if self.transpose:
             out = tf.transpose(out, [0, 2, 1])
@@ -736,7 +755,7 @@ class AttentionBlock(Layer):
             (channels, 1),
             False,
             1,
-            signal_size + 1,
+            7,
             (signal_size, 1),
             False
         )
@@ -772,14 +791,14 @@ class AttentionBlockBN(Layer):
             )
         self.activation = tf.keras.layers.LeakyReLU()
         self.bn = BatchNormalization()
-        self.dp = Dropout(rate=0.1)
+        self.dp = Dropout(rate=0.001)
         self.attention = CBAM(
             1,
             3,
             (channels, 1),
             False,
             1,
-            signal_size + 1,
+            7,
             (signal_size, 1),
             False
         )
@@ -843,7 +862,7 @@ class AttentionDeconv(tf.keras.layers.Layer):
             (channels, 1),
             False,
             1,
-            signal_size + 1,
+            7,
             (signal_size, 1),
             False
         )
@@ -868,14 +887,14 @@ class AttentionDeconvBN(tf.keras.layers.Layer):
             self.activation = tf.keras.layers.LeakyReLU()
         else:
             self.activation = None
-        self.dp = Dropout(rate=0.1)
+        self.dp = Dropout(rate=0.001)
         self.attention = CBAM(
             1,
             3,
             (channels, 1),
             False,
             1,
-            signal_size + 1,
+            7,
             (signal_size, 1),
             False
         )
@@ -907,7 +926,7 @@ class AttentionDeconvECA(tf.keras.layers.Layer):
             (channels, 1),
             False,
             1,
-            signal_size + 1,
+            7,
             (signal_size, 1),
             False,
             spatial=False

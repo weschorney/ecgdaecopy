@@ -60,41 +60,41 @@ if __name__ == "__main__":
 
         time.sleep(60)
 
-        # Classical Filters
+    # Classical Filters
 
-        # FIR
-        start_test = datetime.now()
-        [X_test_f, y_test_f, y_filter] = FIR_test_Dataset(Dataset)
-        end_test = datetime.now()
-        train_time_list.append(0)
-        test_time_list.append(end_test - start_test)
+    # FIR
+    start_test = datetime.now()
+    [X_test_f, y_test_f, y_filter] = FIR_test_Dataset(Dataset)
+    end_test = datetime.now()
+    train_time_list.append(0)
+    test_time_list.append(end_test - start_test)
 
-        test_results_FIR = [X_test_f, y_test_f, y_filter]
+    test_results_FIR = [X_test_f, y_test_f, y_filter]
 
-        # Save FIR filter results
-        with open('cinc_test_results_FIR.pkl', 'wb') as output:  # Overwrites any existing file.
-            pickle.dump(test_results_FIR, output)
-        print('Results from experiment FIR filter saved')
+    # Save FIR filter results
+    with open('cinc_test_results_FIR.pkl', 'wb') as output:  # Overwrites any existing file.
+        pickle.dump(test_results_FIR, output)
+    print('Results from experiment FIR filter saved')
 
-        # IIR
-        start_test = datetime.now()
-        [X_test_f, y_test_f, y_filter] = IIR_test_Dataset(Dataset)
-        end_test = datetime.now()
-        train_time_list.append(0)
-        test_time_list.append(end_test - start_test)
+    # IIR
+    start_test = datetime.now()
+    [X_test_f, y_test_f, y_filter] = IIR_test_Dataset(Dataset)
+    end_test = datetime.now()
+    train_time_list.append(0)
+    test_time_list.append(end_test - start_test)
 
-        test_results_IIR = [X_test_f, y_test_f, y_filter]
+    test_results_IIR = [X_test_f, y_test_f, y_filter]
 
-        # Save IIR filter results
-        with open('cinc_test_results_IIR.pkl', 'wb') as output:  # Overwrites any existing file.
-            pickle.dump(test_results_IIR, output)
-        print('Results from experiment IIR filter saved')
+    # Save IIR filter results
+    with open('cinc_test_results_IIR.pkl', 'wb') as output:  # Overwrites any existing file.
+        pickle.dump(test_results_IIR, output)
+    print('Results from experiment IIR filter saved')
 
-        # Saving timing list
-        timing = [train_time_list, test_time_list]
-        with open('cinc_timing.pkl', 'wb') as output:  # Overwrites any existing file.
-            pickle.dump(timing, output)
-        print('Timing saved')
+    # Saving timing list
+    timing = [train_time_list, test_time_list]
+    with open('cinc_timing.pkl', 'wb') as output:  # Overwrites any existing file.
+        pickle.dump(timing, output)
+    print('Timing saved')
 
 
     ###### LOAD EXPERIMENTS #######
@@ -249,6 +249,7 @@ if __name__ == "__main__":
     # Vanilla DAE
 
     [X_test, y_test, y_pred] = test_Vanilla_DAE
+    y_pred = y_pred.reshape(y_test.shape)
 
     SSD_values_Vanilla_DAE = SSD(y_test, y_pred)
 
