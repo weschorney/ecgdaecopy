@@ -37,6 +37,10 @@ def postprocess():
         return
     X_train, y_train = filter_data(X_train, y_train, cutoff)
     X_test, y_test = filter_data(X_test, y_test, cutoff)
+    X_train = np.array(X_train)
+    y_train = np.array(y_train)
+    X_test = np.array(X_test)
+    y_test = np.array(y_test)
     with open('../data/dataset_mimic.pkl', 'wb') as f:
         pickle.dump([X_train, y_train, X_test, y_test], f)
     return

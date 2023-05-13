@@ -102,7 +102,7 @@ def resample_signal(x, fs, fs_target):
     assert np.all(np.diff(resampled_t) > 0)
     return resampled_x, resampled_t
 
-def load_train_data(my_fs=250):
+def load_train_data(my_fs=360):
     signals = []
     for folder_name in [f'A0{i}' for i in range(9)]:
         for sig in glob.glob(f'../data/cinc2017/training/{folder_name}/*.hea'):
@@ -112,7 +112,7 @@ def load_train_data(my_fs=250):
             signals.append(my_sig)
     return signals
 
-def load_test_data(my_fs=250):
+def load_test_data(my_fs=360):
     signals = []
     for sig in glob.glob('../data/cinc2017/validation/*.hea'):
         my_sig = wfdb.rdsamp(sig[:-4])

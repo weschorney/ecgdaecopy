@@ -48,7 +48,6 @@ def prepare_mimic():
     samples = 512
     noise_index = 0
     # Adding noise to train
-    #TODO: FIX MISSING BETWEEN TRAIN/LABEL AND SAME FOR TEST
     rnd_train = np.random.randint(low=20, high=200, size=len(beats_train)) / 100
     for i in range(len(beats_train)):
         noise = noise_train[noise_index:noise_index + samples]
@@ -123,7 +122,7 @@ def resample_signal(x, fs, fs_target):
     assert np.all(np.diff(resampled_t) > 0)
     return resampled_x, resampled_t
 
-def load_signal(signal_name, fs=250):
+def load_signal(signal_name, fs=360):
     sig = wfdb.rdsamp(signal_name)
     sig, _ = resample_signal(sig[0], sig[1]['fs'], fs)
     return sig
@@ -153,7 +152,7 @@ def split_train_test(signals, test_size=0.2):
     test_signals = list(test_signals)
     return train_signals, test_signals
 
-def make_dataset(sig_list, fs=250):
+def make_dataset(sig_list, fs=360):
     dataset = []
     for sig in sig_list:
         dataset.append(load_signal(sig[:-4]))
