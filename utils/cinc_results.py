@@ -1,20 +1,15 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri May 12 18:04:52 2023
+Created on Sat May 13 17:18:13 2023
 
 @author: wes_c
 """
-import copy
+
 import pickle
-from datetime import datetime
-import time
 import numpy as np
 import visualization as vs
 
 from metrics import MAD, SSD, PRD, COS_SIM
-
-from dfilters import FIR_test_Dataset, IIR_test_Dataset
-from dl_pipeline import train_dl, test_dl
 
 dl_experiments = [
                     'DRNN',
@@ -26,126 +21,41 @@ dl_experiments = [
                     'Vanilla DAE'
                     ]
 
-# Load dataset
-with open('../data/dataset_mimic.pkl', 'rb') as input:
-    Dataset = pickle.load(input)
-
-
-train_time_list = []
-test_time_list = []
-
-for experiment in range(len(dl_experiments)):
-    start_train = datetime.now()
-    train_dl(Dataset, dl_experiments[experiment], ds='mimic')
-    end_train = datetime.now()
-    train_time_list.append(end_train - start_train)#
-
-    start_test = datetime.now()
-    [X_test, y_test, y_pred] = test_dl(Dataset, dl_experiments[experiment], ds='mimic')
-    end_test = datetime.now()
-    test_time_list.append(end_test - start_test)
-
-    test_results = [X_test, y_test, y_pred]
-
-    # Save Results
-    with open('mimic_test_results_' + dl_experiments[experiment] + '.pkl', 'wb') as output:  # Overwrites any existing file.
-        pickle.dump(test_results, output)
-    print('Results from experiment ' + dl_experiments[experiment] + ' saved')
-
-    time.sleep(5)
-
-# Classical Filters
-
-#Make smaller dataset for filters
-D2 = copy.deepcopy(Dataset)
-X_train2, y_train2, X_test2, y_test2 = D2
-cftt = []
-cftet = []
-
-X_train2 = X_train2[:7000,...]
-y_train2 = y_train2[:7000,...]
-X_test2 = X_test2[:7000,...]
-y_test2 = y_test2[:7000,...]
-
-D2 = [X_train2, y_train2, X_test2, y_test2]
-
-# FIR
-start_test = datetime.now()
-[X_test_f, y_test_f, y_filter] = FIR_test_Dataset(D2)
-end_test = datetime.now()
-train_time_list.append(0)
-cftet.append(end_test - start_test)
-
-test_results_FIR = [X_test_f, y_test_f, y_filter]
-
-# Save FIR filter results
-with open('mimic_test_results_FIR.pkl', 'wb') as output:  # Overwrites any existing file.
-    pickle.dump(test_results_FIR, output)
-print('Results from experiment FIR filter saved')
-
-# IIR
-start_test = datetime.now()
-[X_test_f, y_test_f, y_filter] = IIR_test_Dataset(D2)
-end_test = datetime.now()
-train_time_list.append(0)
-cftet.append(end_test - start_test)
-
-test_results_IIR = [X_test_f, y_test_f, y_filter]
-
-# Save IIR filter results
-with open('mimic_test_results_IIR.pkl', 'wb') as output:  # Overwrites any existing file.
-    pickle.dump(test_results_IIR, output)
-print('Results from experiment IIR filter saved')
-
-# Saving timing list
-timing = [train_time_list, test_time_list]
-with open('mimic_timing.pkl', 'wb') as output:  # Overwrites any existing file.
-    pickle.dump(timing, output)
-print('Timing saved')
-with open('mimic_timing_classic.pkl', 'wb') as output:
-    pickle.dump([[0,0], cftet], output)
-
-
 ###### LOAD EXPERIMENTS #######
 
 #Load timing
-with open('mimic_timing.pkl', 'rb') as input:
+with open('cinc_timing.pkl', 'rb') as input:
     timing_nv1 = pickle.load(input)
     [train_time_list, test_time_list] = timing_nv1
 
-with open('mimic_timing_classic.pkl', 'rb') as input:
-    classic_train, classic_test = pickle.load(input)
-
-timing = [classic_train + train_time_list, classic_test + test_time_list]
-
-#TODO: ADD OTHER MODELS AND ONLY ONE TEST
+timing = [train_time_list, test_time_list]
 
 # Load Results DRNN
-with open('mimic_test_results_' + dl_experiments[0] + '.pkl', 'rb') as input:
+with open('cinc_test_results_' + dl_experiments[0] + '.pkl', 'rb') as input:
     test_DRNN = pickle.load(input)
 # Load Results FCN_DAE
-with open('mimic_test_results_' + dl_experiments[1] + '.pkl', 'rb') as input:
+with open('cinc_test_results_' + dl_experiments[1] + '.pkl', 'rb') as input:
     test_FCN_DAE = pickle.load(input)
 # Load Results Vanilla L
-with open('mimic_test_results_' + dl_experiments[2] + '.pkl', 'rb') as input:
+with open('cinc_test_results_' + dl_experiments[2] + '.pkl', 'rb') as input:
     test_CNN_DAE = pickle.load(input)
 # Load Results Multibranch LANLD
-with open('mimic_test_results_' + dl_experiments[3] + '.pkl', 'rb') as input:
+with open('cinc_test_results_' + dl_experiments[3] + '.pkl', 'rb') as input:
     test_Multibranch_LANLD = pickle.load(input)
 #load atskipdae
-with open('mimic_test_results_' + dl_experiments[4] + '.pkl', 'rb') as input:
+with open('cinc_test_results_' + dl_experiments[4] + '.pkl', 'rb') as input:
     test_CBAM_DAE = pickle.load(input)
 #load eca
-with open('mimic_test_results_' + dl_experiments[5] + '.pkl', 'rb') as input:
+with open('cinc_test_results_' + dl_experiments[5] + '.pkl', 'rb') as input:
     test_ACDAE = pickle.load(input)
 #load vanilla
-with open('mimic_test_results_' + dl_experiments[6] + '.pkl', 'rb') as input:
+with open('cinc_test_results_' + dl_experiments[6] + '.pkl', 'rb') as input:
     test_Vanilla_DAE = pickle.load(input)
 # Load Result FIR Filter
-with open('mimic_test_results_FIR.pkl', 'rb') as input:
+with open('cinc_test_results_FIR.pkl', 'rb') as input:
     test_FIR = pickle.load(input)
 # Load Result IIR Filter
-with open('mimic_test_results_IIR.pkl', 'rb') as input:
+with open('cinc_test_results_IIR.pkl', 'rb') as input:
     test_IIR = pickle.load(input)
 ####### Calculate Metrics #######
 print('Calculating metrics ...')
@@ -328,9 +238,7 @@ vs.generate_table_time(timing_var, timing, Exp_names, gpu=True)
 
 ################################################################################################################
 # Segmentation by noise amplitude
-rnd_test = np.load('rnd_test_mimic.npy')
-
-rnd_test = np.concatenate([rnd_test, rnd_test])
+rnd_test = np.load('rnd_test_cinc.npy')
 
 segm = [0.2, 0.6, 1.0, 1.5, 2.0]  # real number of segmentations is len(segmentations) - 1
 SSD_seg_all = []
@@ -448,49 +356,3 @@ COS_SIM_seg_all = np.swapaxes(COS_SIM_seg_all, 0, 1)
 print('\n')
 print('Printing Table for different noise values on the COS SIM metric')
 vs.generate_table(seg_table_column_name, COS_SIM_seg_all, Exp_names)
-
-##############################################################################################################
-#TODO: FIX THIS!
-# Metrics graphs
-#vs.generate_hboxplot(SSD_all, Exp_names, 'SSD (au)', log=False, set_x_axis_size=(0, 100.1))
-#vs.generate_hboxplot(MAD_all, Exp_names, 'MAD (au)', log=False, set_x_axis_size=(0, 3.01))
-#vs.generate_hboxplot(PRD_all, Exp_names, 'PRD (au)', log=False, set_x_axis_size=(0, 100.1))
-#vs.generate_hboxplot(COS_SIM_all, Exp_names, 'Cosine Similarity (0-1)', log=False, set_x_axis_size=(0, 1))
-
-################################################################################################################
-# Visualize signals
-
-signals_index = np.array([110, 210, 410, 810, 1610, 3210, 6410, 12810]) + 10
-
-ecg_signals2plot = []
-ecgbl_signals2plot = []
-dl_signals2plot = []
-fil_signals2plot = []
-
-signal_amount = 10
-
-[X_test, y_test, y_pred] = test_Multibranch_LANLD
-for id in signals_index:
-    ecgbl_signals2plot.append(X_test[id])
-    ecg_signals2plot.append(y_test[id])
-    dl_signals2plot.append(y_pred[id])
-
-[X_test, y_test, y_filter] = test_IIR
-for id in signals_index:
-    fil_signals2plot.append(y_filter[id])
-
-for i in range(len(signals_index)):
-    vs.ecg_view(ecg=ecg_signals2plot[i],
-                ecg_blw=ecgbl_signals2plot[i],
-                ecg_dl=dl_signals2plot[i],
-                ecg_f=fil_signals2plot[i],
-                signal_name=None,
-                beat_no=None)
-
-    vs.ecg_view_diff(ecg=ecg_signals2plot[i],
-                        ecg_blw=ecgbl_signals2plot[i],
-                        ecg_dl=dl_signals2plot[i],
-                        ecg_f=fil_signals2plot[i],
-                        signal_name=None,
-                        beat_no=None)
-
