@@ -16,8 +16,6 @@ from scipy import signal
 from tqdm import tqdm
 from cinc_data_preparation import sigs_to_parts, load_noise
 
-#TODO: FIX DIV BY ZERO
-
 def prepare_mimic():
     np.random.seed(777)
     nstdb = load_noise()
@@ -25,20 +23,20 @@ def prepare_mimic():
     bw_signals = np.array(bw_signals)
     em_signals = np.array(em_signals)
     ma_signals = np.array(ma_signals)
-    #some ecgs only one lead so use noise from there
-    noise_train = bw_signals[0:int(bw_signals.shape[0]/2), 0]
-    noise_test = bw_signals[int(bw_signals.shape[0]/2):-1, 0]
-    noise_train2 = em_signals[0:int(em_signals.shape[0]/2), 0]
-    noise_test2 = em_signals[int(em_signals.shape[0]/2):-1, 0]
-    noise_train3 = ma_signals[0:int(ma_signals.shape[0]/2), 0]
-    noise_test3 = ma_signals[int(ma_signals.shape[0]/2):-1, 0]
+    #ecgs only second lead so use noise from there
+    noise_train = bw_signals[0:int(bw_signals.shape[0]/2), 1]
+    noise_test = bw_signals[int(bw_signals.shape[0]/2):-1, 1]
+    noise_train2 = em_signals[0:int(em_signals.shape[0]/2), 1]
+    noise_test2 = em_signals[int(em_signals.shape[0]/2):-1, 1]
+    noise_train3 = ma_signals[0:int(ma_signals.shape[0]/2), 1]
+    noise_test3 = ma_signals[int(ma_signals.shape[0]/2):-1, 1]
     #load train and test
     signals = get_signal_paths()
     train, test = split_train_test(signals)
     train = make_dataset(train)
     test = make_dataset(test)
-    train = [ele[:,0] if len(ele.shape) > 1 else ele for ele in train]
-    test = [ele[:,0] if len(ele.shape) > 1 else ele for ele in test]
+    train = [ele[:,idx] if len(ele.shape) > 1 else ele for ele, idx in train]
+    test = [ele[:,idx] if len(ele.shape) > 1 else ele for ele, idx in test]
     beats_train = sigs_to_parts(train)
     beats_test = sigs_to_parts(test)
     sn_train = []
@@ -122,15 +120,22 @@ def resample_signal(x, fs, fs_target):
     assert np.all(np.diff(resampled_t) > 0)
     return resampled_x, resampled_t
 
-def load_signal(signal_name, fs=360):
+def load_signal(signal_name, fs=360, all_=False, l2idx=False):
     sig = wfdb.rdsamp(signal_name)
+    info = sig[1]
     sig, _ = resample_signal(sig[0], sig[1]['fs'], fs)
-    return sig
+    if all_:
+        return sig, info
+    if l2idx:
+        return sig, info['sig_name'].index('II')
+    else:
+        return sig
 
 def get_signal_paths():
     paths = glob.glob('../data/ADHD-ECG/ADHD/*')
     #now take only first recording from each patient
     signals = []
+    found = []
     for path in tqdm(paths):
         sigs = glob.glob(path + '/*.dat')
         sigs = [ele for ele in sigs if not re.search('.*[0-9]+n\.dat', ele)]
@@ -139,9 +144,17 @@ def get_signal_paths():
         #we only need to do this once
         if sigs:
             for sig in sigs:
-                my_sig = load_signal(sig[:-4])
-                if not np.isnan(my_sig).any():
+                my_sig, info = load_signal(sig[:-4], all_=True)
+                if not 'II' in info['sig_name']:
+                    continue
+                l2idx = info['sig_name'].index('II')
+                if len(my_sig.shape) > 1:
+                    isnan = np.isnan(my_sig[:, l2idx]).any()
+                else:
+                    isnan = np.isnan(my_sig).any()
+                if not isnan and 'II' in info['sig_name']:
                     signals.append(sig)
+                    found.append(path)
                     break
     return signals
 
@@ -155,7 +168,7 @@ def split_train_test(signals, test_size=0.2):
 def make_dataset(sig_list, fs=360):
     dataset = []
     for sig in sig_list:
-        dataset.append(load_signal(sig[:-4]))
+        dataset.append(load_signal(sig[:-4], l2idx=True))
     return dataset
 
 def sanity_check(arr):
